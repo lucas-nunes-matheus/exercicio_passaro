@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Definindo codificação dos caracteres -->
+    <meta charset="UTF-8">
+
+    <!-- Configurando a exibição da página (largura e escala) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Incluindo o script da biblioteca Phaser com um link -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+
+    <!-- Definindo o título da página (aba do navegador) -->
+    <title>Exercício do Pássaro</title>
+
+    <!-- Posicionando a imagem na tela com CSS -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;  }
+    </style>
+</head>
+
+<body>
+<!-- Inclusão do código do jogo (JS e Phaser) -->
+
+<script>
+
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+var game = new Phaser.Game(config);
+var passarinho;
+
+function preload() {
+    // Carregando  a imagem de plano de fundo
+    this.load.image('bg', 'assets/bg_space.png');
+    
+    // Carregando o spritesheet e o tamanho de cada sprite
+    this.load.spritesheet('bird', 'assets/bird-red.png', { frameWidth: 75, frameHeight: 75 });
+}
+
+
+// Animação do pássaro a partir do número de frames, a taxa de FPS e o número de repetições (contínua)
+function create() {
+    // Adicionando a imagem de plano de fundo
+    this.add.image(400, 300, 'bg').setScale(1.2);
+    // Adicionando a imagem do passarinho
+    passarinho = this.add.sprite(100, 300, 'bird').setScale(1.3);
+    
+
+    // Criando a animação de vôo do passarinho
+    this.anims.create({
+        key: 'fly',
+        frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    // Adicionando a animação de vôo
+    passarinho.anims.play('fly', true);
+}
+
+// Declarando variável para adicionar movimento do pássaro na direção y
+var subindo = true;
+
+function update() {
+    // Adicionando o movimento na direção x
+    // Define ida do pássaro como verdadeira (e sem inversão do passarinho)
+    if (passarinho.x === 100) {
+        passarinho.setFlip(false, false);
+        passarinho.ida = true;
+    }
+    
+    // Com a ida verdadeira, o pássaro se move até "Width=700", com um loop de incremento de 5
+    if (passarinho.x < 700 && passarinho.ida === true) {
+        console.log("O pássaro se move para a direita.");
+        passarinho.x += 5;
+    }
+    
+    // Em "Width=700", a ida se torna falsa (retorno) e ocorre a inversão do passarinho
+    if (passarinho.x === 700) {
+        passarinho.setFlip(true, false);
+        passarinho.ida = false;
+    }
+
+    // Com a ida falsa (retorno verdadeiro), pássaro se move até "Width=100", com loop de decremento de 5
+    if (passarinho.x > 100 && passarinho.ida === false) {
+        console.log("O pássaro se move para a esquerda.");
+        passarinho.x -= 5;
+    }
+
+    // Adicionando movimento na direção y
+    // Passarinho sobe
+    if (subindo == true) {
+        passarinho.y -= 5;
+        if (passarinho.y == 100) {
+            subindo = false;
+        }
+    //Passarinho desce
+    }else if (subindo == false) {
+        passarinho.y += 5;
+        if (passarinho.y == 500) {
+            subindo = true;
+        }
+    }
+
+}
+
+</script>               
+
+</body>
+</html>
